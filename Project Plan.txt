@@ -1,0 +1,16 @@
+Make an HTML, CSS, JS that lets the user to put an excel sheet and then
+generates a report card based on the data provided in the excel sheet; in 
+a table, it should calculate & display:
+
+Things to be displayed:- 
+#-------------------------------------------------------------------#
+1. Percentage
+2. Total Marks
+3. Secured Marks
+4. Subject individual marks
+5. Student Details
+6. Signature of parent, principal & class teacher.
+#-------------------------------------------------------------------#
+
+*The generated report card should go in a database stored in cloud.
+*It should automatically send the .pdf file through the SMS on the given ph.

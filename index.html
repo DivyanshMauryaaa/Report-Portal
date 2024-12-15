@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Information Form</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Assuming you have your own styles -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script> <!-- SheetJS Library -->
+</head>
+<body>
+    <div class="formContainer">
+        <form id="StudentForm">
+            <h1>Student Information</h1>
+            <input type="text" name="StudentName" id="StudentName" required placeholder="Student's name" style="width: 300px;"/>
+            <br>
+            <input type="number" name="Roll" id="Roll" required placeholder="Roll Number" style="width: 60px;"/>
+            <input type="text" name="classTeacher" id="classTeacher" style="width: 224px; margin-top: 5px;" required placeholder="Class Teacher's name">
+            <br>
+            <input type="text" name="FatherName" id="FatherName" required placeholder="Father's name" style="width: 300px; margin-top: 5px;"/>
+            <br>
+            <input type="text" name="MotherName" id="MotherName" required placeholder="Mother's Name" style="width: 300px; margin-top: 5px;"/>
+            <br>
+            <input type="text" name="ClassSection" id="ClassSection" required placeholder="Class & Section (eg. VIII-G)" style="width: 300px; margin-top: 5px;"/>
+            <br>
+            <input type="text" name="AdmissionNumber" id="AdmissionNumber" required placeholder="Admission Number (SR)" style="width: 300px; margin-top: 5px;"/>
+            <br>
+            <input type="date" name="dob" id="dob" required placeholder="Date of Birth" style="width: 300px; margin-top: 5px;"/>
+            <br><br>
+            <label for="File">Marks: </label>
+            <input type="file" name="File" id="File" accept=".xlsx,.xls" required="" title="Marks Excel Sheet"/><br>
+            <label for="profilePhoto">Student Photo: </label>
+            <input type="file" name="profilePhoto" id="profilePhoto" required accept=".png,.jpg,.jpeg,.webp"/><br>
+
+            <button type="submit">Submit Details</button>
+        </form>
+    </div>
+
+    <script>
+        // Get the form element
+        const form = document.getElementById("StudentForm");
+
+        // Handle form submission
+        form.onsubmit = function(event) {
+            // Prevent default form submission
+            event.preventDefault();
+
+            // Get form data
+            const formData = new FormData(form);
+
+            // Get student details
+            const studentName = formData.get('StudentName');
+            const roll = formData.get('Roll');
+            const classTeacher = formData.get('classTeacher');
+            const fatherName = formData.get('FatherName');
+            const classSection = formData.get('ClassSection');
+            const admissionNumber = formData.get('AdmissionNumber');
+            const MotherName = formData.get('MotherName');
+            const dob = formData.get('dob');
+
+            // Get files
+            const marksFile = formData.get('File');
+            const profilePhoto = formData.get('profilePhoto');
+
+            // Read the Excel file (Marks file)
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+
+                // Assuming the first sheet is where the marks are
+                const sheet = workbook.Sheets[workbook.SheetNames[0]];
+                const sheetData = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+
+                // Create a new window to display the data in a table
+                const newWindow = window.open("", "_blank", "width=800,height=600");
+                
+                // Add content to the new window
+                let htmlContent = `
+                    <html>
+                        <head><title>${studentName} Progress Report</title>
+                        <style>
+                            body { font-family: sans-serif; margin: 20px; }
+                            table { width: 100%; border-collapse: collapse; }
+                            table, th, td { border: 1px solid black; }
+                            th, td { padding: 10px; text-align: left; }
+                            img { width: 100px; height: 100px; }
+                        </style>
+                        </head>
+                        <body>
+                            <h1>Progress Report 2024-25</h1>
+                            <table>
+                                <tr>
+                                    <td><img src="${URL.createObjectURL(profilePhoto)}" alt="Student Photo"></td>
+                                    <th>Name</th><td>${studentName}</td>
+                                </tr>
+                                <tr>
+                                    <th>Roll Number</th><td>${roll}</td>
+                                </tr>
+                                <tr>
+                                    <th>Class Teacher</th><td>${classTeacher}</td>
+                                </tr>
+                                <tr>
+                                    <th>Father's Name</th><td>${fatherName}</td>
+                                </tr>
+                                <tr>
+                                    <th>Mother's Name</th><td>${MotherName}</td>
+                                </tr>
+                                <tr>
+                                    <th>Class & Section</th><td>${classSection}</td>
+                                </tr>
+                                <tr>
+                                    <th>Admission Number</th><td>${admissionNumber}</td>
+                                </tr>
+                                <tr>
+                                    <th>Date of Birth</th><td>${dob}</td>
+                                </tr>
+                            </table>
+                            <table>
+                `;
+
+                // Add marks data to the table
+                sheetData.forEach(row => {
+                    htmlContent += `<tr>`;
+                    row.forEach(cell => {
+                        htmlContent += `<td>${cell || '&nbsp;'}</td>`;
+                    });
+                    htmlContent += `</tr>`;
+                });
+
+                htmlContent += `
+                    </table>
+                    <br><br><br><br><br>
+                    <div class="Singatures" style="display: flex; justify-content:space-between;">
+                        <div class="Sign-principal">
+                            ____________________ <br><br>
+                            Signature Principal
+                        </div>
+                        <div class="Sign-CT">
+                            ____________________ <br><br>
+                            Signature Class Teacher
+                        </div>
+                        <div class="Sign-Parent">
+                            ____________________ <br><br>
+                            Signature Parent
+                        </div>
+                    </div>
+                </body>
+                </html>
+                `;
+
+                // Write the HTML content into the new window
+                newWindow.document.write(htmlContent);
+            };
+
+            // Read the marks file as binary string
+            reader.readAsArrayBuffer(marksFile);
+        };
+    </script>
+</body>
+</html>

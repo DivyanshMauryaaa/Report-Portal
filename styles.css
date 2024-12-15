@@ -1,0 +1,62 @@
+html {
+    font-family: sans-serif;
+}
+
+input {
+    border: none;
+    background-color: rgb(246, 245, 244);
+    height: 30px;
+    width: 600px;
+    padding: 8px;
+    border-radius: 0px;
+}
+
+input:focus {
+    outline: none;
+}
+
+#File {
+    padding: 4px;
+    width: 180px;
+    background: none;
+}
+
+#profilePhoto {
+    padding: 4px;
+    width: 180px;
+    background: none;
+    margin-bottom: 20px;
+}
+
+form {
+    padding: 10px;
+    border: 1px solid grey;
+    width: 400px;
+    height: 590px;
+    border-radius: 10px;
+    margin-top: 30px;
+}
+
+form button {
+    width: 300px;
+    padding: 10px;
+    background: #FFF;
+    border: 0.2px solid grey;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+}
+
+form button:hover {
+    background: #1556cf;
+    color: #fff;
+    border: none;
+}
+
+.formContainer {
+    justify-content: center;
+    text-align: center;
+    max-width: fit-content;
+    margin-left: auto;
+    margin-right: auto;
+}
